@@ -10,13 +10,14 @@
     return hrScripts.length > 0;
   };
 
+  const sendMsgToBackground = (obj) => {
+    chrome.runtime.sendMessage(obj);
+  };
+
   const checkPagesDiv = () => {
     const pagesDiv = document.querySelector("[id^=helloretail-category-page-]");
     if (!pagesDiv) return;
   };
 
-  if (!isHrScriptPresent()) return;
-
-  console.log("Script found!");
-  checkPagesDiv();
+  sendMsgToBackground({ scriptActive: isHrScriptPresent() });
 })();
