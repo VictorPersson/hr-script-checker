@@ -1,16 +1,15 @@
-// Does it ever need to be emptied?
-const currentTabs = [];
+const tabsWithScript = new Set();
+const openWindows = new Set();
+let focusedWindow;
 
 const updateIcon = (isScriptActive, tabId) => {
-  chrome.action.setIcon(
-    {
-      path: {
-        16: `hr_icon_${isScriptActive ? "active" : "inactive"}.png`,
-      },
+  chrome.action.setIcon({
+    tabId: tabId,
+    path: {
+      16: `hr_icon_${isScriptActive ? "active" : "inactive"}.png`,
     },
-    tabId
-  );
-  if (isScriptActive) currentTabs.push(tabId);
+  });
+  if (isScriptActive) tabsWithScript.add(tabId);
 };
 
 const msgReceived = (obj, sender, sendRes) => {
@@ -23,8 +22,19 @@ chrome.action.onClicked.addListener(buttonClicked);
 chrome.runtime.onMessage.addListener(msgReceived);
 
 chrome.tabs.onActivated.addListener(function (tab) {
-  // BUG 1: When you drag tabs out in multiple windows, icon switches
-  // glocally in all windows.
-  const scriptActive = currentTabs.includes(tab.tabId);
+  const scriptActive = tabsWithScript.has(tab.tabId);
   updateIcon(scriptActive, tab.tabId);
+});
+
+chrome.tabs.onRemoved.addListener(function (tab) {
+  if (tabsWithScript.has(tab)) tabsWithScript.delete(tab);
+});
+
+chrome.windows.onCreated.addListener(function (window) {
+  openWindows.add([window.id]);
+  focusedWindow = window.id;
+});
+
+chrome.windows.onRemoved.addListener(function (window) {
+  if (openWindows.has(window.id)) tabsWithScript.delete(window.id);
 });

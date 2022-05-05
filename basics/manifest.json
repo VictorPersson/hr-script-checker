@@ -12,7 +12,8 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_icon": "hr_icon_inactive.png"
+    "default_icon": "hr_icon_inactive.png",
+    "default_title": "Hello Retail main script"
   },
   "permissions": ["activeTab"]
 }
