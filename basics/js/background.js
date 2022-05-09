@@ -20,7 +20,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 function checkScript(req) {
-  const hrScriptFragment = /awAddGift\.js#\w+/;
+  const hrScriptFragment = /awAddGift\.js#,?\w+/;
   if (req.url.match(hrScriptFragment)) {
     updateIcon(req.statusCode === 200 ? true : false, req.tabId);
     req.statusCode === 200
