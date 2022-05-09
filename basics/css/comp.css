@@ -1,3 +1,15 @@
-
+#hr-extension-main {
+  background: rgb(221, 69, 123);
+  background: linear-gradient(243deg, rgb(221, 69, 123) 15%, rgb(26, 81, 147) 86%);
+  border-radius: 1rem;
+}
+#hr-extension-main .container {
+  min-width: 20rem;
+  padding: 0.1rem 1rem;
+}
+#hr-extension-main .container .main-header {
+  font-size: 1rem;
+  color: #FFFFFF;
+}
 
 /*# sourceMappingURL=comp.css.map */
