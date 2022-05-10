@@ -4,12 +4,18 @@
   border-radius: 1rem;
 }
 #hr-extension-main .container {
-  min-width: 20rem;
+  display: flex;
+  justify-content: space-between;
+  min-width: 21.5rem;
   padding: 0.1rem 1rem;
 }
-#hr-extension-main .container .main-header {
+#hr-extension-main .container #main-header {
   font-size: 1rem;
   color: #FFFFFF;
+}
+#hr-extension-main .container .main-header-loading {
+  width: 2rem;
+  margin-top: 0.35rem;
 }
 
 /*# sourceMappingURL=comp.css.map */

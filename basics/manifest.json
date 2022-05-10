@@ -4,7 +4,7 @@
   "version": "0.001",
   "description": "Extension for websites using Hello Retail services",
   "icons": {
-    "128": "images/hello-avatar-round_128_1.png"
+    "128": "images/hello-avatar-round_128.png"
   },
   "content_scripts": [
     {
@@ -17,8 +17,9 @@
   },
   "action": {
     "default_icon": "images/hr_icon_inactive.png",
-    "default_title": "Hello Retail extension"
+    "default_title": "Hello Retail extension",
+    "default_popup": "html/popup.html#popup"
   },
-  "permissions": ["activeTab", "webRequest"],
+  "permissions": ["activeTab", "webRequest", "storage"],
   "host_permissions": ["<all_urls>"]
 }
