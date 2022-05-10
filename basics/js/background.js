@@ -10,13 +10,23 @@ const updateIcon = (isScriptActive, tabId) => {
 };
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log("Site updated");
+  console.log("Site updated", changeInfo);
   if (changeInfo.status) {
     chrome.webRequest.onCompleted.addListener(checkScript, {
       urls: ["<all_urls>"],
     });
     // Make sure we only call func if window is 100% laoded.
     // contactPopup(tabId, { scriptActive: true });
+  }
+
+  if (changeInfo.status === "complete") {
+    chrome.storage.local.get(["scriptActive"], function (result) {
+      console.log(result.scriptActive);
+    });
+
+    contactPopup(tabId, {
+      scriptActive: tabsWithScript.has(tabId) ? true : false,
+    });
   }
 });
 
@@ -32,16 +42,32 @@ const contactPopup = (tab, data) => {
   }
 };
 
-chrome.action.onClicked.addListener(contactPopup);
+/*
+const checkScript = (req) => {
+  const hrScriptFragment = "/scripts/company/awAddGift.js";
+  if (req.url.startsWith(hrScriptFragment)) {
+    chrome.webRequest.onCompleted.removeListener(checkScript);
+    return {
+      webRequest: { res: req },
+      status: { scriptActive: req.statusCode === 200 ? true : false },
+    };
+  }
+  return { webRequest: {}, status: { scriptActive: false } };
+};
+*/
 
-function checkScript(req) {
-  const hrScriptFragment = /awAddGift\.js#,?\w+/;
+const checkScript = (req) => {
+  let obj = {};
+  const hrScriptFragment = "/scripts/company/awAddGift.js";
   if (req.url.match(hrScriptFragment)) {
-    console.log(`Script detected on: ${req.initiator} (${req.url})`);
+    chrome.webRequest.onCompleted.removeListener(checkScript);
     updateIcon(req.statusCode === 200 ? true : false, req.tabId);
     req.statusCode === 200
       ? tabsWithScript.add(req.tabId)
       : tabsWithScript.delete(req.tabId);
-    chrome.webRequest.onCompleted.removeListener(checkScript);
+    Object.assign(obj, req);
   }
-}
+  chrome.storage.local.set({
+    scriptActive: obj,
+  });
+};
