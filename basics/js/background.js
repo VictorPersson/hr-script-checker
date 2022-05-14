@@ -1,4 +1,4 @@
-const tabsWithScript = new Set();
+const tabsWithScript = new Map();
 
 const updateIcon = (isScriptActive, tabId) => {
   chrome.action.setIcon({
@@ -9,65 +9,57 @@ const updateIcon = (isScriptActive, tabId) => {
   });
 };
 
+const updatePopup = (fileName, tabId) => {
+  chrome.action.setPopup({
+    tabId: tabId,
+    popup: `../html/${fileName}`,
+  });
+};
+
+const updateStorage = (data) => {
+  chrome.storage.local.set({
+    scriptActive: data || { statusCode: 404 },
+  });
+};
+
+const checkScript = (req) => {
+  const hrScriptFragment = "/scripts/company/awAddGift.js";
+  if (req.url.match(hrScriptFragment)) {
+    chrome.webRequest.onCompleted.removeListener(checkScript);
+
+    updateIcon(req.statusCode === 200 ? true : false, req.tabId);
+    updatePopup("popup.html", req.tabId);
+
+    req.statusCode === 200
+      ? tabsWithScript.set(req.tabId, req)
+      : tabsWithScript.delete(req.tabId);
+  }
+};
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log("Site updated", changeInfo);
   if (changeInfo.status) {
     chrome.webRequest.onCompleted.addListener(checkScript, {
       urls: ["<all_urls>"],
     });
-    // Make sure we only call func if window is 100% laoded.
-    // contactPopup(tabId, { scriptActive: true });
   }
 
   if (changeInfo.status === "complete") {
-    chrome.storage.local.get(["scriptActive"], function (result) {
-      console.log(result.scriptActive);
-    });
-
-    contactPopup(tabId, {
-      scriptActive: tabsWithScript.has(tabId) ? true : false,
-    });
+    const scriptData = tabsWithScript.get(tabId);
+    updateStorage(scriptData);
   }
 });
 
-const contactPopup = (tab, data) => {
-  try {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, data, function (response) {
-        console.log(response.responseBackground);
-      });
-    });
-  } catch {
-    console.log("Could not connect to popup");
-  }
-};
-
-/*
-const checkScript = (req) => {
-  const hrScriptFragment = "/scripts/company/awAddGift.js";
-  if (req.url.startsWith(hrScriptFragment)) {
-    chrome.webRequest.onCompleted.removeListener(checkScript);
-    return {
-      webRequest: { res: req },
-      status: { scriptActive: req.statusCode === 200 ? true : false },
-    };
-  }
-  return { webRequest: {}, status: { scriptActive: false } };
-};
-*/
-
-const checkScript = (req) => {
-  let obj = {};
-  const hrScriptFragment = "/scripts/company/awAddGift.js";
-  if (req.url.match(hrScriptFragment)) {
-    chrome.webRequest.onCompleted.removeListener(checkScript);
-    updateIcon(req.statusCode === 200 ? true : false, req.tabId);
-    req.statusCode === 200
-      ? tabsWithScript.add(req.tabId)
-      : tabsWithScript.delete(req.tabId);
-    Object.assign(obj, req);
-  }
-  chrome.storage.local.set({
-    scriptActive: obj,
+chrome.windows.onFocusChanged.addListener(() => {
+  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+    const scriptData = tabsWithScript.get(tabs[0].id ?? 0);
+    console.log(scriptData);
+    updateStorage(scriptData);
+    updatePopup("popup.html", tabs[0].id);
   });
-};
+});
+
+chrome.tabs.onActivated.addListener((tab) => {
+  const scriptData = tabsWithScript.get(tab.tabId ?? 0);
+  updateStorage(scriptData);
+  updatePopup("popup.html", tab.tabId);
+});

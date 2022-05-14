@@ -1,8 +1,6 @@
 "use strict";
 
 console.log("Content script loaded");
-console.log(document.getElementById("main-header"));
-console.log(document.querySelector("body"));
 
 (function () {
   const checkPagesDiv = () => {
