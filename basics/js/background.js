@@ -22,6 +22,10 @@ const updateStorage = (data) => {
   });
 };
 
+const checkMap = (id) => {
+  return tabsWithScript.has(id) ? tabsWithScript.get(id) : 0;
+};
+
 const checkScript = (req) => {
   const hrScriptFragment = "/scripts/company/awAddGift.js";
   if (req.url.match(hrScriptFragment)) {
@@ -44,22 +48,21 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   if (changeInfo.status === "complete") {
-    const scriptData = tabsWithScript.get(tabId);
+    const scriptData = checkMap(tabId);
     updateStorage(scriptData);
   }
 });
 
 chrome.windows.onFocusChanged.addListener(() => {
   chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-    const scriptData = tabsWithScript.get(tabs[0].id ?? 0);
-    console.log(scriptData);
+    const scriptData = checkMap(tabs[0].id);
     updateStorage(scriptData);
     updatePopup("popup.html", tabs[0].id);
   });
 });
 
 chrome.tabs.onActivated.addListener((tab) => {
-  const scriptData = tabsWithScript.get(tab.tabId ?? 0);
+  const scriptData = checkMap(tab.tabId);
   updateStorage(scriptData);
   updatePopup("popup.html", tab.tabId);
 });
