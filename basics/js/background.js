@@ -9,10 +9,10 @@ const updateIcon = (isScriptActive, tabId) => {
   });
 };
 
-const updatePopup = (fileName, tabId) => {
+const updatePopup = (isScriptActive, tabId) => {
   chrome.action.setPopup({
     tabId: tabId,
-    popup: `../html/${fileName}`,
+    popup: `../html/popup_${isScriptActive ? "active" : "inactive"}.html`,
   });
 };
 
@@ -32,7 +32,7 @@ const checkScript = (req) => {
     chrome.webRequest.onCompleted.removeListener(checkScript);
 
     updateIcon(req.statusCode === 200 ? true : false, req.tabId);
-    updatePopup("popup.html", req.tabId);
+    updatePopup(req.statusCode === 200 ? true : false, req.tabId);
 
     req.statusCode === 200
       ? tabsWithScript.set(req.tabId, req)
@@ -53,16 +53,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
+/*
+
 chrome.windows.onFocusChanged.addListener(() => {
   chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-    const scriptData = checkMap(tabs[0].id);
+    const id = tabs.length ? tabs[0].id : 0;
+    const scriptData = checkMap(id);
     updateStorage(scriptData);
-    updatePopup("popup.html", tabs[0].id);
   });
 });
 
 chrome.tabs.onActivated.addListener((tab) => {
   const scriptData = checkMap(tab.tabId);
   updateStorage(scriptData);
-  updatePopup("popup.html", tab.tabId);
 });
+
+*/
