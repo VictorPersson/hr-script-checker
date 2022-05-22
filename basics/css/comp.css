@@ -6,26 +6,29 @@ body {
 #hr-extension-main {
   border-radius: 1rem;
   background: #FFFFFF;
-  min-height: 20rem;
-}
-#hr-extension-main .container--header {
-  display: flex;
-  justify-content: space-between;
-  min-width: 21.5rem;
   padding: 0.1rem 1rem;
 }
-#hr-extension-main .container--header #main-header {
-  font-size: 1rem;
-  color: #494949;
+#hr-extension-main .container--loading {
+  display: flex;
+  justify-content: space-between;
+  min-width: 28rem;
 }
-#hr-extension-main .container--header .main-header-loading {
+#hr-extension-main .main-header {
+  font-size: 1.1rem;
+  color: #494949;
+  margin-bottom: 0;
+}
+#hr-extension-main .main-header-loading {
   width: 2rem;
   margin-top: 0.35rem;
+}
+#hr-extension-main .sub-header {
+  margin-top: 0.3rem;
 }
 #hr-extension-main .container--settings .checkbox--container {
   display: flex;
   flex-direction: column;
-  margin: 4px 8px;
+  margin: 4px 0px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e3e3e3;
 }

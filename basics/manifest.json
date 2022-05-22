@@ -18,7 +18,7 @@
   "action": {
     "default_icon": "images/hr_icon_inactive.png",
     "default_title": "Hello Retail extension",
-    "default_popup": "html/popup.html#popup"
+    "default_popup": "html/popup_inactive.html"
   },
   "permissions": ["activeTab", "webRequest", "storage"],
   "host_permissions": ["<all_urls>"]
