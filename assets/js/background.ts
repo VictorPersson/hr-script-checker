@@ -1,6 +1,17 @@
 const tabsWithScript = new Map();
 
-const updateIcon = (isScriptActive, tabId) => {
+interface IRequest {
+  url: string;
+  tabId: number;
+  statusCode: number;
+  name: Iurl;
+}
+
+interface Iurl {
+  name: string;
+}
+
+const updateIcon = (isScriptActive: boolean, tabId: number) => {
   chrome.action.setIcon({
     tabId: tabId,
     path: {
@@ -9,24 +20,24 @@ const updateIcon = (isScriptActive, tabId) => {
   });
 };
 
-const updatePopup = (isScriptActive, tabId) => {
+const updatePopup = (isScriptActive: boolean, tabId: number) => {
   chrome.action.setPopup({
     tabId: tabId,
     popup: `../html/popup_${isScriptActive ? "active" : "inactive"}.html`,
   });
 };
 
-const updateStorage = (data) => {
+const updateStorage = (data: object) => {
   chrome.storage.local.set({
     scriptActive: data || { statusCode: 404 },
   });
 };
 
-const checkMap = (id) => {
+const checkMap = (id: number) => {
   return tabsWithScript.has(id) ? tabsWithScript.get(id) : 0;
 };
 
-const checkScript = (req) => {
+const checkScript = (req: chrome.webRequest.WebResponseCacheDetails) => {
   const hrScriptFragment = "/scripts/company/awAddGift.js";
   if (req.url.match(hrScriptFragment)) {
     chrome.webRequest.onCompleted.removeListener(checkScript);
@@ -40,32 +51,17 @@ const checkScript = (req) => {
   }
 };
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status) {
-    chrome.webRequest.onCompleted.addListener(checkScript, {
-      urls: ["<all_urls>"],
-    });
+chrome.tabs.onUpdated.addListener(
+  (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+    if (changeInfo.status) {
+      chrome.webRequest.onCompleted.addListener(checkScript, {
+        urls: ["<all_urls>"],
+      });
+    }
+
+    if (changeInfo.status === "complete") {
+      const scriptData = checkMap(tabId);
+      updateStorage(scriptData);
+    }
   }
-
-  if (changeInfo.status === "complete") {
-    const scriptData = checkMap(tabId);
-    updateStorage(scriptData);
-  }
-});
-
-/*
-
-chrome.windows.onFocusChanged.addListener(() => {
-  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-    const id = tabs.length ? tabs[0].id : 0;
-    const scriptData = checkMap(id);
-    updateStorage(scriptData);
-  });
-});
-
-chrome.tabs.onActivated.addListener((tab) => {
-  const scriptData = checkMap(tab.tabId);
-  updateStorage(scriptData);
-});
-
-*/
+);
