@@ -1,10 +1,13 @@
+@import "variables.scss";
+
 body {
-  background: linear-gradient(243deg, #dd457b 15%, #1a5193 86%);
+  background: $hrGradient;
   padding: 10px;
+  font-family: $fontMain;
 }
 #hr-extension-main {
   border-radius: 1rem;
-  background: #ffffff;
+  background: $white;
   padding: 0.1rem 1rem;
   .container--loading {
     display: flex;
@@ -13,8 +16,9 @@ body {
   }
   .main-header {
     font-size: 1.1rem;
-    color: #494949;
+    color: $greyDark;
     margin-bottom: 0;
+    font-weight: 600;
   }
   .main-header-loading {
     width: 2rem;
@@ -22,14 +26,33 @@ body {
   }
   .sub-header {
     margin-top: 0.3rem;
+    font-weight: 400;
   }
+
+  .container--menu {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: $white;
+    box-shadow: $boxShadow;
+    cursor: pointer;
+
+    &__icon {
+      transform-origin: center;
+      transform: scale(0.6);
+    }
+  }
+
   .container--settings {
     .checkbox--container {
       display: flex;
       flex-direction: column;
       margin: 4px 0px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #e3e3e3;
+      border-bottom: 1px solid $greyMedium;
       &:last-child {
         border: 0;
       }
@@ -45,7 +68,7 @@ body {
       width: 74px;
       height: 36px;
       overflow: hidden;
-      background: #e3e3e3;
+      background: $greyLight;
       border-radius: 2px;
     }
     .checkbox {
@@ -60,10 +83,11 @@ body {
     }
     .knobs {
       z-index: 2;
+      font-weight: 400;
     }
     .layer {
       width: 100%;
-      background-color: #ebf7fc;
+      background-color: $greyMedium;
       transition: 0.3s ease all;
     }
     #button {
@@ -82,7 +106,7 @@ body {
           transition: 0.3s ease all;
           content: "";
           left: 4px;
-          background-color: #3f3f3f;
+          background-color: $greyDark;
         }
         &:after {
           position: absolute;
@@ -113,7 +137,7 @@ body {
           transition: 0.3s ease all;
           display: inline-block;
           left: 4px;
-          color: #ffffff;
+          color: $white;
           z-index: 1;
         }
       }
@@ -122,20 +146,20 @@ body {
           + {
             .knobs {
               span {
-                color: #4e4e4e;
+                color: $greyDark;
               }
               &:before {
                 left: 42px;
-                background-color: #dd457b;
+                background-color: $pink;
               }
               &:after {
-                color: #ffffff;
+                color: $white;
               }
             }
           }
           ~ {
             .layer {
-              background-color: #fcebeb;
+              background-color: $greyLight;
             }
           }
         }
