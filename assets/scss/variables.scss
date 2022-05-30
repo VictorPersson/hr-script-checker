@@ -1,0 +1,25 @@
+// Font
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,800;1,200&display=swap");
+
+$fontMain: "Poppins", sans-serif;
+
+// Colors
+
+$white: #ffffff;
+
+$greyDarker: #2c3a47;
+$greyDark: #485460;
+$greyMedium: #9aa0a5;
+$greyLight: #cfcece;
+
+$pink: #ee268c;
+$red: #f16064;
+$green: #3db480;
+$blue: #1a5193;
+
+$hrGradient: linear-gradient(243deg, $pink 15%, $blue 86%);
+
+// Shadow - Glow
+
+$boxShadow: 0 1rem 1rem rgba($greyDark, 0.15);
+$boxShadowMoved: 0 1rem 2rem rgba($greyDark, 0.15);
