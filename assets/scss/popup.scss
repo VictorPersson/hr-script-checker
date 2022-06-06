@@ -29,6 +29,39 @@ body {
     font-weight: 400;
   }
 
+  .container--nav {
+    display: flex;
+    justify-content: space-evenly;
+    height: 2rem;
+
+    &__menu-item {
+      width: 100%;
+      margin: 0rem 0.4rem;
+      transition: 0.15s;
+      cursor: pointer;
+
+      &--title {
+        text-align: center;
+        color: $greyDark;
+        font-weight: 400;
+        text-transform: uppercase;
+        margin: 0rem;
+        padding: 0.2rem;
+
+        &:hover {
+          border-bottom: 0.1rem solid $greyMedium;
+          color: $pink;
+        }
+
+        &--active {
+          transition: all 0.3s;
+          border-bottom: 0.1rem solid $pink;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
   .container--menu {
     position: absolute;
     top: 0.4rem;
@@ -42,7 +75,7 @@ body {
 
     &__icon {
       transform-origin: center;
-      transform: scale(0.6);
+      transform: scale(0.5);
     }
   }
 
