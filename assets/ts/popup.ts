@@ -34,5 +34,19 @@ const mainContainer = document.getElementById("hr-extension-main");
 const menuDiv = createHtml("DIV", ["container--menu"]);
 const icon = createIcon(["container--menu__icon"]);
 
-menuDiv.appendChild(icon);
-mainContainer?.appendChild(menuDiv);
+const menuBar = createHtml("NAV", ["container--nav"]);
+const menuTitles = ["Home", "Settings", "Admin"];
+
+menuTitles.forEach((title, index) => {
+  const container = createHtml("DIV", ["container--nav__menu-item"]);
+  const header = createHtml("H3", ["container--nav__menu-item--title"]);
+  header.innerText = title;
+  container.appendChild(header);
+  menuBar.appendChild(container);
+  if (index === 0)
+    header.classList.add("container--nav__menu-item--title--active");
+});
+
+// menuDiv.appendChild(icon);
+// mainContainer?.appendChild(menuDiv);
+mainContainer?.prepend(menuBar);
