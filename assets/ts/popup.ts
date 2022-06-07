@@ -1,6 +1,19 @@
+import { Node } from "typescript";
+
 chrome.storage.local.get(["scriptActive"], (result) => {
   const scriptActive: boolean = result.scriptActive.statusCode === 200;
 });
+
+const updateMenu = (id: string) => {
+  chrome.storage.local.set({
+    activeMenuTab: id,
+  });
+
+  chrome.storage.local.get(["activeMenuTab"], (result) => {
+    const currMenu: string = result.activeMenuTab;
+    console.log(currMenu);
+  });
+};
 
 const createHtml = (type: string, classArr: string[], id?: string) => {
   const div = document.createElement(type);
@@ -39,12 +52,29 @@ const menuTitles = ["Home", "Settings", "Admin"];
 
 menuTitles.forEach((title, index) => {
   const container = createHtml("DIV", ["container--nav__menu-item"]);
-  const header = createHtml("H3", ["container--nav__menu-item--title"]);
+  const header = createHtml(
+    "H3",
+    ["container--nav__menu-item--title"],
+    index.toString()
+  );
   header.innerText = title;
   container.appendChild(header);
   menuBar.appendChild(container);
   if (index === 0)
     header.classList.add("container--nav__menu-item--title--active");
+});
+
+mainContainer?.addEventListener("click", function (e) {
+  const clicked = (e.target as HTMLElement).closest(
+    ".container--nav__menu-item--title"
+  );
+  if (!clicked) return;
+  const tabs = document.querySelectorAll(".container--nav__menu-item--title");
+  tabs.forEach((tab) => {
+    tab.classList.remove("container--nav__menu-item--title--active");
+  });
+  clicked.classList.add("container--nav__menu-item--title--active");
+  updateMenu(clicked.id);
 });
 
 // menuDiv.appendChild(icon);
