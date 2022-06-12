@@ -5,6 +5,56 @@ body {
   padding: 10px;
   font-family: $fontMain;
 }
+
+.container--nav {
+  display: flex;
+  justify-content: space-evenly;
+  height: 2rem;
+
+  &__menu-item {
+    width: 100%;
+    margin: 0rem 0.4rem;
+    transition: 0.15s;
+    cursor: pointer;
+
+    &--title {
+      text-align: center;
+      color: $white;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin: 0rem;
+      padding: 0.2rem;
+
+      &:hover {
+        border-bottom: 0.1rem solid $greyMedium;
+      }
+
+      &--active {
+        transition: all 0.3s;
+        border-bottom: 0.1rem solid $white;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.container--menu {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: $white;
+  box-shadow: $boxShadow;
+  cursor: pointer;
+
+  &__icon {
+    transform-origin: center;
+    transform: scale(0.5);
+  }
+}
+
 #hr-extension-main {
   border-radius: 1rem;
   background: $white;
@@ -27,56 +77,6 @@ body {
   .sub-header {
     margin-top: 0.3rem;
     font-weight: 400;
-  }
-
-  .container--nav {
-    display: flex;
-    justify-content: space-evenly;
-    height: 2rem;
-
-    &__menu-item {
-      width: 100%;
-      margin: 0rem 0.4rem;
-      transition: 0.15s;
-      cursor: pointer;
-
-      &--title {
-        text-align: center;
-        color: $greyDark;
-        font-weight: 400;
-        text-transform: uppercase;
-        margin: 0rem;
-        padding: 0.2rem;
-
-        &:hover {
-          border-bottom: 0.1rem solid $greyMedium;
-          color: $pink;
-        }
-
-        &--active {
-          transition: all 0.3s;
-          border-bottom: 0.1rem solid $pink;
-          font-weight: 600;
-        }
-      }
-    }
-  }
-
-  .container--menu {
-    position: absolute;
-    top: 0.4rem;
-    left: 0.4rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    background: $white;
-    box-shadow: $boxShadow;
-    cursor: pointer;
-
-    &__icon {
-      transform-origin: center;
-      transform: scale(0.5);
-    }
   }
 
   .container--settings {

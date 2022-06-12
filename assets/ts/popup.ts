@@ -4,16 +4,25 @@ chrome.storage.local.get(["scriptActive"], (result) => {
   const scriptActive: boolean = result.scriptActive.statusCode === 200;
 });
 
-const updateMenu = (id: string) => {
+const updateMenu = (id: number) => {
   chrome.storage.local.set({
     activeMenuTab: id,
   });
-
-  chrome.storage.local.get(["activeMenuTab"], (result) => {
-    const currMenu: string = result.activeMenuTab;
-    console.log(currMenu);
-  });
 };
+
+const renderPage = () => {
+  chrome.storage.local.get(["activeMenuTab"], (result) => {
+    const currMenu: number = result.activeMenuTab;
+    console.log(typeof currMenu);
+    if (currMenu === 0) {
+      console.log("Render start main menu");
+    } else if (currMenu === 1) {
+      console.log("Render Settings");
+    } else if (currMenu === 2) {
+      console.log("Render Admin panel"); 
+    }
+  });
+}
 
 const createHtml = (type: string, classArr: string[], id?: string) => {
   const div = document.createElement(type);
@@ -64,7 +73,7 @@ menuTitles.forEach((title, index) => {
     header.classList.add("container--nav__menu-item--title--active");
 });
 
-mainContainer?.addEventListener("click", function (e) {
+b?.addEventListener("click", function (e) {
   const clicked = (e.target as HTMLElement).closest(
     ".container--nav__menu-item--title"
   );
@@ -74,9 +83,10 @@ mainContainer?.addEventListener("click", function (e) {
     tab.classList.remove("container--nav__menu-item--title--active");
   });
   clicked.classList.add("container--nav__menu-item--title--active");
-  updateMenu(clicked.id);
+  updateMenu(+clicked.id);
+  renderPage();
 });
 
 // menuDiv.appendChild(icon);
 // mainContainer?.appendChild(menuDiv);
-mainContainer?.prepend(menuBar);
+b?.prepend(menuBar);
