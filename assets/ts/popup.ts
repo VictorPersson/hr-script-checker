@@ -4,25 +4,87 @@ chrome.storage.local.get(["scriptActive"], (result) => {
   const scriptActive: boolean = result.scriptActive.statusCode === 200;
 });
 
+const buildExtension = () => {
+  const menuTitles = ["Home", "Settings", "Admin"];
+
+  menuTitles.forEach((title, index) => {
+    const container = createHtml("DIV", ["hr-nav__menu-item"]);
+    const header = createHtml(
+      "H3",
+      ["hr-nav__menu-item--title"],
+      index.toString()
+    );
+    header.innerText = title;
+    container.appendChild(header);
+    menuBar.appendChild(container);
+    if (index === 0) header.classList.add("hr-nav__menu-item--title--active");
+  });
+
+  b?.addEventListener("click", function (e) {
+    const clicked = (e.target as HTMLElement).closest(
+      ".hr-nav__menu-item--title"
+    );
+    if (!clicked) return;
+    const tabs = document.querySelectorAll(".hr-nav__menu-item--title");
+    tabs.forEach((tab) => {
+      tab.classList.remove("hr-nav__menu-item--title--active");
+    });
+    clicked.classList.add("hr-nav__menu-item--title--active");
+    updateMenu(+clicked.id);
+    renderPage(+clicked.id);
+  });
+};
+
+const fetchMenuData = (key: string) => {
+  console.log(key, typeof key);
+
+  let activeKeyTab: number = 0;
+  chrome.storage.local.get("activeMenuTab", function (result) {
+    console.log(
+      "Value currently is " + result.activeMenuTab,
+      typeof result.activeMenuTab
+    );
+    activeKeyTab = +result.key;
+  });
+  return activeKeyTab;
+};
+
 const updateMenu = (id: number) => {
   chrome.storage.local.set({
     activeMenuTab: id,
   });
+
+  const main = document.querySelector("#hr-extension > main");
+  (main as HTMLElement).dataset.activeSection = id.toString();
+
+  const activeMenuSection = document.getElementById(id.toString());
+  const tabs = document.querySelectorAll(".hr-nav__menu-item--title");
+
+  tabs.forEach((tab) => {
+    tab.classList.remove("hr-nav__menu-item--title--active");
+  });
+  activeMenuSection?.classList.add("hr-nav__menu-item--title--active");
 };
 
-const renderPage = () => {
+const renderPage = (id: number) => {
   chrome.storage.local.get(["activeMenuTab"], (result) => {
     const currMenu: number = result.activeMenuTab;
     console.log(typeof currMenu);
+    const main = document.querySelector("#hr-extension > main > .container");
+    const oldMain = main?.cloneNode(true);
+    main!.innerHTML = "";
+    const div = createHtml("DIV", ["container--settings"]);
     if (currMenu === 0) {
-      console.log("Render start main menu");
+      main?.appendChild(oldMain);
     } else if (currMenu === 1) {
       console.log("Render Settings");
+      main?.appendChild(div);
     } else if (currMenu === 2) {
-      console.log("Render Admin panel"); 
+      console.log("Render Admin panel");
+      main?.appendChild(div);
     }
   });
-}
+};
 
 const createHtml = (type: string, classArr: string[], id?: string) => {
   const div = document.createElement(type);
@@ -51,42 +113,12 @@ const createIcon = (classArr: string[]) => {
 };
 
 const b: HTMLElement = document.body;
-const mainContainer = document.getElementById("hr-extension-main");
+const menuBar = createHtml("NAV", ["hr-nav"]);
 
-const menuDiv = createHtml("DIV", ["container--menu"]);
-const icon = createIcon(["container--menu__icon"]);
-
-const menuBar = createHtml("NAV", ["container--nav"]);
-const menuTitles = ["Home", "Settings", "Admin"];
-
-menuTitles.forEach((title, index) => {
-  const container = createHtml("DIV", ["container--nav__menu-item"]);
-  const header = createHtml(
-    "H3",
-    ["container--nav__menu-item--title"],
-    index.toString()
-  );
-  header.innerText = title;
-  container.appendChild(header);
-  menuBar.appendChild(container);
-  if (index === 0)
-    header.classList.add("container--nav__menu-item--title--active");
-});
-
-b?.addEventListener("click", function (e) {
-  const clicked = (e.target as HTMLElement).closest(
-    ".container--nav__menu-item--title"
-  );
-  if (!clicked) return;
-  const tabs = document.querySelectorAll(".container--nav__menu-item--title");
-  tabs.forEach((tab) => {
-    tab.classList.remove("container--nav__menu-item--title--active");
-  });
-  clicked.classList.add("container--nav__menu-item--title--active");
-  updateMenu(+clicked.id);
-  renderPage();
-});
-
-// menuDiv.appendChild(icon);
-// mainContainer?.appendChild(menuDiv);
 b?.prepend(menuBar);
+buildExtension();
+
+const currMenuTab = fetchMenuData("activeMenuTab");
+console.log("send" + currMenuTab);
+
+updateMenu(currMenuTab);
