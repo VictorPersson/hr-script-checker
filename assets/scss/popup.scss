@@ -1,12 +1,14 @@
 @import "variables.scss";
 
-body {
+body#hr-extension {
   background: $hrGradient;
   padding: 10px;
   font-family: $fontMain;
+  min-width: 28rem;
+  min-height: 25rem;
 }
 
-.container--nav {
+.hr-nav {
   display: flex;
   justify-content: space-evenly;
   height: 2rem;
@@ -20,49 +22,33 @@ body {
     &--title {
       text-align: center;
       color: $white;
-      font-weight: 400;
+      font-weight: 600;
       text-transform: uppercase;
       margin: 0rem;
       padding: 0.2rem;
+      transition: all 0.3s;
+      border-bottom: 0.1rem solid rgba(255, 255, 255, 0);
 
-      &:hover {
-        border-bottom: 0.1rem solid $greyMedium;
+      &:hover:not([class^="&--active"]) {
+        border-bottom: 0.1rem solid rgba(255, 255, 255, 0.315);
       }
 
       &--active {
         transition: all 0.3s;
         border-bottom: 0.1rem solid $white;
-        font-weight: 600;
+        font-weight: 800;
       }
     }
   }
 }
 
-.container--menu {
-  position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: $white;
-  box-shadow: $boxShadow;
-  cursor: pointer;
-
-  &__icon {
-    transform-origin: center;
-    transform: scale(0.5);
-  }
-}
-
-#hr-extension-main {
+.hr-main {
   border-radius: 1rem;
   background: $white;
   padding: 0.1rem 1rem;
   .container--loading {
     display: flex;
     justify-content: space-between;
-    min-width: 28rem;
   }
   .main-header {
     font-size: 1.1rem;
