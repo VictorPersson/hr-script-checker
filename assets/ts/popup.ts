@@ -1,5 +1,3 @@
-import { Node } from "typescript";
-
 chrome.storage.local.get(["scriptActive"], (result) => {
   const scriptActive: boolean = result.scriptActive.statusCode === 200;
 });
@@ -33,6 +31,43 @@ const buildExtension = () => {
     updateMenu(+clicked.id);
     renderPage(+clicked.id);
   });
+
+  const buildMain = (text: string) => {
+    const main = createHtml("MAIN", ["hr-main"]);
+    main.dataset.activeSection = "0";
+
+    const container = createHtml("DIV", ["container"]);
+    const containerSettings = createHtml("DIV", ["container--settings"]);
+
+    const checkboxContainer = createHtml("DIV", ["checkbox--container"]);
+    const checkboxTooltip = createHtml("SPAN", ["checkbox--tooltip"]);
+    const checkboxButton = createHtml("DIV", ["checkbox--button"], "button");
+    const checkboxInput = createHtml("INPUT", ["checkbox"]);
+    const checkboxKnob = createHtml("DIV", ["knobs"]);
+    const checkboxSpan = createHtml("SPAN");
+    (checkboxInput as HTMLInputElement).type = "checkbox";
+    checkboxSpan.innerText = "NO";
+    checkboxKnob.appendChild(checkboxSpan);
+
+    const checkboxLayer = createHtml("SPAN", ["layer"]);
+    checkboxTooltip.innerText = text;
+
+    checkboxButton.appendChild(checkboxInput).after(checkboxKnob);
+
+    checkboxContainer.appendChild(checkboxTooltip).after(checkboxButton);
+
+    main
+      .appendChild(container)
+      .appendChild(containerSettings)
+      .appendChild(checkboxContainer);
+
+    b.appendChild(main);
+  };
+
+  buildMain("Main script");
+  buildMain("Setting 1");
+  buildMain("Setting 2");
+  buildMain("Setting 3");
 };
 
 const fetchMenuData = (key: string) => {
@@ -75,7 +110,7 @@ const renderPage = (id: number) => {
     main!.innerHTML = "";
     const div = createHtml("DIV", ["container--settings"]);
     if (currMenu === 0) {
-      main?.appendChild(oldMain);
+      console.log("0");
     } else if (currMenu === 1) {
       console.log("Render Settings");
       main?.appendChild(div);
@@ -86,9 +121,9 @@ const renderPage = (id: number) => {
   });
 };
 
-const createHtml = (type: string, classArr: string[], id?: string) => {
+const createHtml = (type: string, classArr?: string[], id?: string) => {
   const div = document.createElement(type);
-  if (classArr.length) div.classList.add(...classArr);
+  if (classArr) div.classList.add(...classArr);
   if (id) div.id = id;
   return div;
 };

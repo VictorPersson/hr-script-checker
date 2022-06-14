@@ -1,11 +1,40 @@
 @import "variables.scss";
 
-body#hr-extension {
+html {
   background: $hrGradient;
-  padding: 10px;
-  font-family: $fontMain;
+  padding: 0.2rem;
+  border-radius: 1rem;
   min-width: 28rem;
   min-height: 25rem;
+  padding: 0.25rem;
+}
+
+body#hr-extension {
+  font-family: $fontMain;
+  background: $white;
+  padding: 0.7rem;
+  border-radius: 0.2rem;
+}
+
+.hr-header {
+  .container--loading {
+    display: flex;
+    justify-content: space-between;
+  }
+  .main-header-loading {
+    width: 2rem;
+    margin-top: 0.35rem;
+  }
+  &__main-header {
+    font-size: 1.1rem;
+    color: $greyDark;
+    margin-bottom: 0;
+    font-weight: 600;
+  }
+  &__sub-header {
+    margin-top: 0.3rem;
+    font-weight: 400;
+  }
 }
 
 .hr-nav {
@@ -21,7 +50,7 @@ body#hr-extension {
 
     &--title {
       text-align: center;
-      color: $white;
+      color: $greyMedium;
       font-weight: 600;
       text-transform: uppercase;
       margin: 0rem;
@@ -31,40 +60,20 @@ body#hr-extension {
 
       &:hover:not([class^="&--active"]) {
         border-bottom: 0.1rem solid rgba(255, 255, 255, 0.315);
+        color: $greyDark;
       }
 
       &--active {
         transition: all 0.3s;
-        border-bottom: 0.1rem solid $white;
+        border-bottom: 0.1rem solid $pink;
         font-weight: 800;
+        color: $pink;
       }
     }
   }
 }
 
 .hr-main {
-  border-radius: 1rem;
-  background: $white;
-  padding: 0.1rem 1rem;
-  .container--loading {
-    display: flex;
-    justify-content: space-between;
-  }
-  .main-header {
-    font-size: 1.1rem;
-    color: $greyDark;
-    margin-bottom: 0;
-    font-weight: 600;
-  }
-  .main-header-loading {
-    width: 2rem;
-    margin-top: 0.35rem;
-  }
-  .sub-header {
-    margin-top: 0.3rem;
-    font-weight: 400;
-  }
-
   .container--settings {
     .checkbox--container {
       display: flex;
