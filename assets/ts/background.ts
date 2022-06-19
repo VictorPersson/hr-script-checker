@@ -1,4 +1,5 @@
 const tabsWithScript = new Map();
+const tabsWithSupervisor = new Map();
 
 interface IRequest {
   url: string;
@@ -48,6 +49,20 @@ const checkScript = (req: chrome.webRequest.WebResponseCacheDetails) => {
     req.statusCode === 200
       ? tabsWithScript.set(req.tabId, req)
       : tabsWithScript.delete(req.tabId);
+  }
+};
+
+const checkSupervisorScript = (req: chrome.webRequest.WebResponseCacheDetails) => {
+  const supervisorFragment = "/main-supervisor.";
+  if (req.url.match(supervisorFragment)) {
+    chrome.webRequest.onCompleted.removeListener(checkSupervisorScript);
+
+    updateIcon(req.statusCode === 200 ? true : false, req.tabId);
+    updatePopup(req.statusCode === 200 ? true : false, req.tabId);
+
+    req.statusCode === 200
+      ? tabsWithSupervisor.set(req.tabId, req)
+      : tabsWithSupervisor.delete(req.tabId);
   }
 };
 

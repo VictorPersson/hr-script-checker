@@ -2,8 +2,10 @@ chrome.storage.local.get(["scriptActive"], (result) => {
   const scriptActive: boolean = result.scriptActive.statusCode === 200;
 });
 
-const buildExtension = () => {
-  const menuTitles = ["Home", "Settings", "Admin"];
+
+const buildExtension = (main: HTMLElement, header: HTMLElement) => {
+  main.dataset.activeSection = "0";
+  const menuTitles = ["Status", "Settings", "Admin"];
 
   menuTitles.forEach((title, index) => {
     const container = createHtml("DIV", ["hr-nav__menu-item"]);
@@ -32,42 +34,11 @@ const buildExtension = () => {
     renderPage(+clicked.id);
   });
 
-  const buildMain = (text: string) => {
-    const main = createHtml("MAIN", ["hr-main"]);
-    main.dataset.activeSection = "0";
-
-    const container = createHtml("DIV", ["container"]);
-    const containerSettings = createHtml("DIV", ["container--settings"]);
-
-    const checkboxContainer = createHtml("DIV", ["checkbox--container"]);
-    const checkboxTooltip = createHtml("SPAN", ["checkbox--tooltip"]);
-    const checkboxButton = createHtml("DIV", ["checkbox--button"], "button");
-    const checkboxInput = createHtml("INPUT", ["checkbox"]);
-    const checkboxKnob = createHtml("DIV", ["knobs"]);
-    const checkboxSpan = createHtml("SPAN");
-    (checkboxInput as HTMLInputElement).type = "checkbox";
-    checkboxSpan.innerText = "NO";
-    checkboxKnob.appendChild(checkboxSpan);
-
-    const checkboxLayer = createHtml("SPAN", ["layer"]);
-    checkboxTooltip.innerText = text;
-
-    checkboxButton.appendChild(checkboxInput).after(checkboxKnob);
-
-    checkboxContainer.appendChild(checkboxTooltip).after(checkboxButton);
-
-    main
-      .appendChild(container)
-      .appendChild(containerSettings)
-      .appendChild(checkboxContainer);
-
-    b.appendChild(main);
-  };
-
-  buildMain("Main script");
-  buildMain("Setting 1");
-  buildMain("Setting 2");
-  buildMain("Setting 3");
+  const h1 = createHtml("H1", ["hr-header__main-header"]);
+  const h3 = createHtml("H3", ["hr-header__sub-header"]);
+  h1.innerText = "This page is using Hello Retail. ✅";
+  h3.innerText = "Hello Retail main script detected on this page.";
+  header.appendChild(h1).after(h3);
 };
 
 const fetchMenuData = (key: string) => {
@@ -102,23 +73,56 @@ const updateMenu = (id: number) => {
 };
 
 const renderPage = (id: number) => {
+  const settings = ["Main script", "Setting 1", "Setting 2", "Setting 3",]
   chrome.storage.local.get(["activeMenuTab"], (result) => {
     const currMenu: number = result.activeMenuTab;
-    console.log(typeof currMenu);
-    const main = document.querySelector("#hr-extension > main > .container");
-    const oldMain = main?.cloneNode(true);
-    main!.innerHTML = "";
-    const div = createHtml("DIV", ["container--settings"]);
+    const main = document.querySelector("#hr-extension > main") as HTMLElement;
+    main.innerHTML = "";
     if (currMenu === 0) {
-      console.log("0");
+      renderHome(main)
     } else if (currMenu === 1) {
-      console.log("Render Settings");
-      main?.appendChild(div);
+      renderSettings(main, settings);
     } else if (currMenu === 2) {
-      console.log("Render Admin panel");
-      main?.appendChild(div);
+      renderAdmin(main);
     }
   });
+};
+
+const renderHome = (main: HTMLElement) => {
+};
+
+const renderSettings = (main: HTMLElement, settings: string[]) => {
+  const buildSettings = (text: string) => {
+    
+    const container = createHtml("DIV", ["container"]);
+    const containerSettings = createHtml("DIV", ["container--settings"]);
+
+    const checkboxContainer = createHtml("DIV", ["checkbox--container"]);
+    const checkboxTooltip = createHtml("SPAN", ["checkbox--tooltip"]);
+    const checkboxButton = createHtml("DIV", ["checkbox--button"], "button");
+    const checkboxInput = createHtml("INPUT", ["checkbox"]);
+    const checkboxKnob = createHtml("DIV", ["knobs"]);
+    const checkboxSpan = createHtml("SPAN");
+    (checkboxInput as HTMLInputElement).type = "checkbox";
+    checkboxSpan.innerText = "NO";
+    checkboxKnob.appendChild(checkboxSpan);
+
+    checkboxTooltip.innerText = text;
+
+    checkboxButton.appendChild(checkboxInput).after(checkboxKnob);
+    checkboxContainer.appendChild(checkboxTooltip).after(checkboxButton);
+
+    main
+      .appendChild(container)
+      .appendChild(containerSettings)
+      .appendChild(checkboxContainer);
+  };
+
+  settings.forEach((setting) => buildSettings(setting));
+};
+
+const renderAdmin = (main: HTMLElement) => {
+  main.innerText = "Admin text";
 };
 
 const createHtml = (type: string, classArr?: string[], id?: string) => {
@@ -149,9 +153,13 @@ const createIcon = (classArr: string[]) => {
 
 const b: HTMLElement = document.body;
 const menuBar = createHtml("NAV", ["hr-nav"]);
+const header = createHtml("HEADER", ["hr-header"]);
+const main = createHtml("MAIN", ["hr-main"]);
 
 b?.prepend(menuBar);
-buildExtension();
+b?.appendChild(header);
+b?.appendChild(main);
+buildExtension(main, header);
 
 const currMenuTab = fetchMenuData("activeMenuTab");
 console.log("send" + currMenuTab);
