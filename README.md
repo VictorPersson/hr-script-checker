@@ -1,7 +1,3 @@
-<h3 align="center">:construction: Early state of development :construction:</h3>
-
----
-
 # :shaved_ice: hr-script-checker
 
 ### _Is this site using Hello Retail?_
