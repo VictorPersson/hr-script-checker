@@ -73,6 +73,28 @@ body#hr-extension {
 }
 
 .hr-main {
+  .status-container {
+    h4,
+    h5 {
+      margin: 0;
+      font-weight: 500;
+      font-size: 0.75rem;
+    }
+
+    &__mainHeader {
+      span {
+        font-weight: 600;
+        color: $pink;
+      }
+    }
+
+    &__secondHeader {
+      span {
+        font-weight: 600;
+        color: $pink;
+      }
+    }
+  }
   .container--settings {
     .checkbox--container {
       display: flex;

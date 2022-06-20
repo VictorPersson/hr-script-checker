@@ -2,7 +2,6 @@ chrome.storage.local.get(["scriptActive"], (result) => {
   const scriptActive: boolean = result.scriptActive.statusCode === 200;
 });
 
-
 const buildExtension = (main: HTMLElement, header: HTMLElement) => {
   main.dataset.activeSection = "0";
   const menuTitles = ["Status", "Settings", "Admin"];
@@ -31,7 +30,7 @@ const buildExtension = (main: HTMLElement, header: HTMLElement) => {
     });
     clicked.classList.add("hr-nav__menu-item--title--active");
     updateMenu(+clicked.id);
-    renderPage(+clicked.id);
+    updateMain();
   });
 
   const h1 = createHtml("H1", ["hr-header__main-header"]);
@@ -39,11 +38,11 @@ const buildExtension = (main: HTMLElement, header: HTMLElement) => {
   h1.innerText = "This page is using Hello Retail. ✅";
   h3.innerText = "Hello Retail main script detected on this page.";
   header.appendChild(h1).after(h3);
+
+  updateMain();
 };
 
 const fetchMenuData = (key: string) => {
-  console.log(key, typeof key);
-
   let activeKeyTab: number = 0;
   chrome.storage.local.get("activeMenuTab", function (result) {
     console.log(
@@ -72,28 +71,44 @@ const updateMenu = (id: number) => {
   activeMenuSection?.classList.add("hr-nav__menu-item--title--active");
 };
 
-const renderPage = (id: number) => {
-  const settings = ["Main script", "Setting 1", "Setting 2", "Setting 3",]
+const updateMain = () => {
   chrome.storage.local.get(["activeMenuTab"], (result) => {
     const currMenu: number = result.activeMenuTab;
     const main = document.querySelector("#hr-extension > main") as HTMLElement;
     main.innerHTML = "";
     if (currMenu === 0) {
-      renderHome(main)
+      renderStatus(main);
     } else if (currMenu === 1) {
-      renderSettings(main, settings);
+      renderSettings(main);
     } else if (currMenu === 2) {
       renderAdmin(main);
     }
   });
 };
 
-const renderHome = (main: HTMLElement) => {
+const renderStatus = (main: HTMLElement) => {
+  const statusDiv = createHtml("DIV", ["status-container"]);
+  const pagesH4 = createHtml("H4", ["status-container__mainHeader"]);
+  const pagesH5 = createHtml("H5", ["status-container__secondHeader"]);
+
+  chrome.storage.local.get(["pagesDiv"], (result) => {
+    console.log(result.pagesDiv);
+    if (result.pagesDiv.isPresent) {
+      pagesH4.innerHTML = `Detected Pages div with ID: <span>${result.pagesDiv.id}</span>`;
+      pagesH5.innerHTML = `Supplied data/path: <span>${result.pagesDiv.hierarchies}</span>`;
+    } else {
+      pagesH5.innerText = "No pages div detected on this page";
+    }
+  });
+
+  statusDiv.appendChild(pagesH4).after(pagesH5);
+  main.appendChild(statusDiv);
 };
 
-const renderSettings = (main: HTMLElement, settings: string[]) => {
+const renderSettings = (main: HTMLElement) => {
+  const settings = ["Main script", "Setting 1", "Setting 2", "Setting 3"];
+
   const buildSettings = (text: string) => {
-    
     const container = createHtml("DIV", ["container"]);
     const containerSettings = createHtml("DIV", ["container--settings"]);
 
@@ -159,9 +174,5 @@ const main = createHtml("MAIN", ["hr-main"]);
 b?.prepend(menuBar);
 b?.appendChild(header);
 b?.appendChild(main);
+
 buildExtension(main, header);
-
-const currMenuTab = fetchMenuData("activeMenuTab");
-console.log("send" + currMenuTab);
-
-updateMenu(currMenuTab);

@@ -5,6 +5,7 @@ mix
   .sass("assets/scss/popup.scss", "assets/dist/css")
   .js("assets/ts/popup.ts", "assets/dist/js")
   .js("assets/ts/background.ts", "assets/dist/js")
+  .js("assets/ts/content.ts", "assets/dist/js")
   .webpackConfig({
     module: {
       rules: [
