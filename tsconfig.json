@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "outDir": "./assets/dist",
     "rootDir": "./assets/ts",
-    "target": "es6",
+    "target": "ESNext",
     "skipLibCheck": true,
     "strict": true,
     "useUnknownInCatchVariables": false,
