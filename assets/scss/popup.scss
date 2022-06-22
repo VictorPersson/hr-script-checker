@@ -16,6 +16,8 @@ body#hr-extension {
 }
 
 .hr-header {
+  border-bottom: 0.1rem solid #bbbbbb;
+  margin-bottom: 1rem;
   .container--loading {
     display: flex;
     justify-content: space-between;
@@ -55,11 +57,10 @@ body#hr-extension {
       margin: 0rem;
       padding: 0.2rem;
       transition: all 0.3s;
-      border-bottom: 0.1rem solid rgba(255, 255, 255, 0);
 
-      &:hover:not([class^="&--active"]) {
-        border-bottom: 0.1rem solid rgba(255, 255, 255, 0.315);
-        color: $greyDark;
+      &:hover:not(.hr-nav__menu-item--title--active) {
+        border-bottom: 0.1rem solid $greyMedium;
+        color: $blue;
       }
 
       &--active {
@@ -67,6 +68,7 @@ body#hr-extension {
         border-bottom: 0.1rem solid $pink;
         font-weight: 800;
         color: $pink;
+        translate: trasform(10px);
       }
     }
   }
