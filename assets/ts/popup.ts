@@ -83,6 +83,7 @@ const updateMain = () => {
     } else if (currMenu === 2) {
       renderAdmin(main);
     }
+    updateMenu(currMenu);
   });
 };
 
@@ -94,8 +95,8 @@ const renderStatus = (main: HTMLElement) => {
   chrome.storage.local.get(["pagesDiv"], (result) => {
     console.log(result.pagesDiv);
     if (result.pagesDiv.isPresent) {
-      pagesH4.innerHTML = `Detected Pages div with ID: <span>${result.pagesDiv.id}</span>`;
-      pagesH5.innerHTML = `Supplied data/path: <span>${result.pagesDiv.hierarchies}</span>`;
+      pagesH4.innerHTML = `✅ Detected Pages div with ID: <span>${result.pagesDiv.id}</span>`;
+      pagesH5.innerHTML = `✅ Supplied data/path: <span>${result.pagesDiv.hierarchies}</span>`;
     } else {
       pagesH5.innerText = "No pages div detected on this page";
     }
