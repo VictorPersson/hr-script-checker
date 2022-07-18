@@ -1,5 +1,6 @@
 const tabsWithScript = new Map();
 const tabsWithSupervisor = new Map();
+const tabsWithPagesScript = new Map();
 
 interface IRequest {
   url: string;
@@ -28,6 +29,15 @@ const updatePopup = (isScriptActive: boolean, tabId: number) => {
   });
 };
 
+const updateContentScript = (tabId: number) => {
+  console.log(tabId);
+
+  chrome.scripting.executeScript({
+    target: { tabId: tabId },
+    files: ["js/content.js"],
+  });
+};
+
 const updateStorage = (data: object) => {
   chrome.storage.local.set({
     scriptActive: data || { statusCode: 404 },
@@ -52,7 +62,9 @@ const checkScript = (req: chrome.webRequest.WebResponseCacheDetails) => {
   }
 };
 
-const checkSupervisorScript = (req: chrome.webRequest.WebResponseCacheDetails) => {
+const checkSupervisorScript = (
+  req: chrome.webRequest.WebResponseCacheDetails
+) => {
   const supervisorFragment = "/main-supervisor.";
   if (req.url.match(supervisorFragment)) {
     chrome.webRequest.onCompleted.removeListener(checkSupervisorScript);
@@ -66,6 +78,10 @@ const checkSupervisorScript = (req: chrome.webRequest.WebResponseCacheDetails) =
   }
 };
 
+chrome.tabs.onActivated.addListener((activeInfo) =>
+  updateContentScript(activeInfo.tabId)
+);
+
 chrome.tabs.onUpdated.addListener(
   (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
     if (changeInfo.status) {
@@ -77,6 +93,7 @@ chrome.tabs.onUpdated.addListener(
     if (changeInfo.status === "complete") {
       const scriptData = checkMap(tabId);
       updateStorage(scriptData);
+      updateContentScript(tabId);
     }
   }
 );

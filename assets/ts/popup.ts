@@ -88,12 +88,15 @@ const updateMain = () => {
 };
 
 const renderStatus = (main: HTMLElement) => {
+  console.log("Now update status");
+
   const statusDiv = createHtml("DIV", ["status-container"]);
   const pagesH4 = createHtml("H4", ["status-container__mainHeader"]);
   const pagesH5 = createHtml("H5", ["status-container__secondHeader"]);
 
   chrome.storage.local.get(["pagesDiv"], (result) => {
-    console.log(result.pagesDiv);
+    console.log("Check pages");
+    console.log(result);
     if (result.pagesDiv.isPresent) {
       pagesH4.innerHTML = `✅ Detected Pages div with ID: <span>${result.pagesDiv.id}</span>`;
       pagesH5.innerHTML = `✅ Supplied data/path: <span>${result.pagesDiv.hierarchies}</span>`;
@@ -107,16 +110,16 @@ const renderStatus = (main: HTMLElement) => {
 };
 
 const renderSettings = (main: HTMLElement) => {
-  const settings = ["Main script", "Setting 1", "Setting 2", "Setting 3"];
+  const settings = ["Main script", "Reload script", "Setting 2", "Setting 3"];
 
-  const buildSettings = (text: string) => {
+  const buildSettings = (text: string, index: Number) => {
     const container = createHtml("DIV", ["container"]);
     const containerSettings = createHtml("DIV", ["container--settings"]);
 
     const checkboxContainer = createHtml("DIV", ["checkbox--container"]);
     const checkboxTooltip = createHtml("SPAN", ["checkbox--tooltip"]);
     const checkboxButton = createHtml("DIV", ["checkbox--button"], "button");
-    const checkboxInput = createHtml("INPUT", ["checkbox"]);
+    const checkboxInput = createHtml("INPUT", ["checkbox"], `button-${index}`);
     const checkboxKnob = createHtml("DIV", ["knobs"]);
     const checkboxSpan = createHtml("SPAN");
     (checkboxInput as HTMLInputElement).type = "checkbox";
@@ -134,7 +137,20 @@ const renderSettings = (main: HTMLElement) => {
       .appendChild(checkboxContainer);
   };
 
-  settings.forEach((setting) => buildSettings(setting));
+  settings.forEach((setting, index) => buildSettings(setting, index));
+
+  const reloadScriptBtn = document.getElementById("button-1");
+  console.log(reloadScriptBtn);
+
+  reloadScriptBtn?.addEventListener("click", function () {
+    console.log("Reloading Hello Retail script...");
+
+    /*
+    chrome.storage.local.set({
+      reloadScript: true,
+    });
+    */
+  });
 };
 
 const renderAdmin = (main: HTMLElement) => {
@@ -177,3 +193,5 @@ b?.appendChild(header);
 b?.appendChild(main);
 
 buildExtension(main, header);
+
+console.log("Test");
